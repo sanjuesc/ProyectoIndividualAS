@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: servidor-web
+  name: servidor-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: servidor-web
+  template:
+    metadata:
+      labels:
+        service: servidor-web
+    spec:
+      containers:
+        - env:
+            - name: JDBC_PASS
+              value: password
+            - name: JDBC_URL
+              value: jdbc:mysql://db:3306/SISTEMAS
+            - name: JDBC_USER
+              value: root
+          image: andersanjuan/sistemas:latest
+          name: servidor-web
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: /usr/local/tomcat/misArchivos
+              name: basededatos
+      restartPolicy: Always
+      volumes:
+        - name: basededatos
+          persistentVolumeClaim:
+            claimName: basededatos
+

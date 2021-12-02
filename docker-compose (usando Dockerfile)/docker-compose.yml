@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+        db:
+                image: 'mysql:5.7'
+                restart: always
+                environment:
+                        MYSQL_DATABASE: 'SISTEMAS'
+
+                        MYSQL_USER: 'user'
+
+                        MYSQL_PASSWORD: 'password'
+
+                        MYSQL_ROOT_PASSWORD: 'password'
+                                          
+        servidor-web:
+                build:
+                        context: .
+                        dockerfile: Dockerfile
+                environment:
+                        JDBC_URL: 'jdbc:mysql://db:3306/SISTEMAS'
+                        JDBC_USER: 'root'
+                        JDBC_PASS: 'password'
+                ports:
+                        - "80:8080"
+                links:
+                        - db
+                volumes:
+                        - baseDeDatos:/usr/local/tomcat/misArchivos
+volumes:
+        baseDeDatos:
